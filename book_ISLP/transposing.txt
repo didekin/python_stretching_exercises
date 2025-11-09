@@ -1,0 +1,83 @@
+You can transpose a DataFrame in pandas using the `.T` attribute or the `.transpose()` method. Here are the main approaches:
+
+## Basic Transpose
+```python
+# Using .T attribute
+df_transposed = df.T
+
+# Using .transpose() method
+df_transposed = df.transpose()
+```
+
+## Complete Example with Column Names
+
+```python
+import pandas as pd
+
+# Original DataFrame
+df = pd.DataFrame({
+    'A': [1, 2, 3],
+    'B': [4, 5, 6],
+    'C': [7, 8, 9]
+}, index=['row1', 'row2', 'row3'])
+
+print("Original DataFrame:")
+print(df)
+
+# Transpose and add column names (previous row names)
+df_transposed = df.T
+df_transposed.columns = df.index  # Set columns to original row names
+
+print("\nTransposed DataFrame:")
+print(df_transposed)
+```
+
+## More Robust Approach
+
+```python
+# Reset index to keep original row names as a column, then transpose
+df_transposed = df.reset_index().T
+
+# Set the first row as column names
+df_transposed.columns = df_transposed.iloc[0]
+df_transposed = df_transposed[1:]  # Remove the first row
+
+print(df_transposed)
+```
+
+## Using rename_axis and reset_index
+
+```python
+# Preserve original index as column names
+df_transposed = (df.T
+                 .rename_axis('new_index_name')  # Name for the new index
+                 .reset_index())                 # Convert index to column
+
+print(df_transposed)
+```
+
+## One-liner with Custom Column Names
+
+```python
+# Transpose and set custom column names
+df_transposed = df.T
+df_transposed.columns = ['col1', 'col2', 'col3']  # Your custom names
+
+print(df_transposed)
+```
+
+## Most Common Practical Solution
+
+```python
+# Simple transpose keeping original row names as column names
+df_transposed = df.T
+df_transposed.columns.name = 'columns'  # Optional: name the columns axis
+
+print(df_transposed)
+```
+
+The key points:
+- Use `.T` or `.transpose()` for the actual transposition
+- The original row names become the new column names automatically
+- Use `.columns` to assign custom names if needed
+- Consider using `reset_index()` if you want to preserve the original index as data
