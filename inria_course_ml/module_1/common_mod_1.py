@@ -11,5 +11,7 @@ def dfFromArffFile(strpath):
     assert os.path.exists(file_path)
     arff_file = sc.io.arff.loadarff(file_path)
     print(print(f'Metadata =============================================\n {arff_file[1]}'))
-    return pd.DataFrame(arff_file[0])
-
+    df = pd.DataFrame(arff_file[0])
+    for column in df.select_dtypes(include='object').columns:
+        df[column] = df[column].str.decode('utf-8')
+    return df
